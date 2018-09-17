@@ -12,13 +12,39 @@ namespace StreamCompaction {
             return timer;
         }
 
+
+        __global__ void kernEfficientGpuScan(int n, int *odata, const int *idata) {
+        
+        }
+
+        __global__ void kernBuildTree(const int n, const int* d_data_in, int* d_data_out) {
+          
+        }
+
         /**
          * Performs prefix-sum (aka scan) on idata, storing the result into odata.
          */
         void scan(int n, int *odata, const int *idata) {
-            timer().startGpuTimer();
-            // TODO
-            timer().endGpuTimer();
+          dim3 blockSize(BLOCK_SIZE);
+          dim3 gridSize((n + BLOCK_SIZE - 1) / BLOCK_SIZE);
+
+          // allocate memory
+          int* d_data_in;
+          int* d_data_out;
+          cudaMalloc((void**)&d_data_in, n * sizeof(int));
+          cudaMalloc((void**)&d_data_out, n * sizeof(int));
+          cudaMemcpy(d_data_in, idata, n * sizeof(int), cudaMemcpyHostToDevice);
+          timer().startGpuTimer();
+
+
+
+          timer().endGpuTimer();
+          // for readbility
+          std::swap(d_data_in, d_data_out);
+          odata[0] = 0;
+          cudaMemcpy(odata + 1, d_data_out, (n - 1) * sizeof(int), cudaMemcpyDeviceToHost);
+          cudaFree(d_data_out);
+          cudaFree(d_data_in);
         }
 
         /**

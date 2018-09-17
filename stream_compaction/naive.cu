@@ -16,7 +16,7 @@ namespace StreamCompaction {
     __global__ void kernNaiveGPUScan(const int n, const int offset, const int* d_data_in, int* d_data_out) {
       int idx = threadIdx.x + blockDim.x * blockIdx.x;
       if (idx >= n) return;
-      if (idx - offset < 0) {
+      if (idx < offset) {
         d_data_out[idx] = d_data_in[idx];
       }
       else {
