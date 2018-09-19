@@ -20,19 +20,32 @@ CUDA Stream Compaction
 
 ### Block size analysis
 
+We fix array size as 2^21 and change the block size.
+
 ![block_size](img/block_size.png)
+
+As we can see, as long as the block size is not 32, it makes little differences when we increase the block size.
 
 ### Array Size Analysis on Scan
 
+We fix block size as 1024 and change the array size.
+
 ![scan](img/scan.png)
+
+As we can see, CPU is of course the slowest. We can also see that my own implementation is still much slower than
+Thrust implementation. I think this is because our own code is still not efficient and hardware-exploiting enough.
 
 ### Array Size Analysis on Compaction
 
+We fix block size as 1024 and change the array size.
+
 ![compaction](img/compaction.png)
+
+As we can see, CPU with scan is the slowest. I think that scan brings overhead to CPU, thus, if we are using CPU, we'd rather not use scan at all.
 
 ## Output
 
-Array size 2^26, block size 1024
+Array size 2^28, block size 1024
 
 ```shell
 
